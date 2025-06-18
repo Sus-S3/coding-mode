@@ -1,0 +1,243 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Code Academy - Sobre Nosotros</title>
+    <link rel="stylesheet" href="css/styles.css">
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css" rel="stylesheet">
+</head>
+<body>
+    <!-- Header -->
+    <header class="header">
+        <div class="container">
+            <div class="logo">
+                <i class="fas fa-code"></i>
+                <h1>Code Academy</h1>
+            </div>
+            <nav class="nav" id="nav">
+                <ul class="nav-links">
+                    <li><a href="index.html">Inicio</a></li>
+                    <li><a href="courses.html">Cursos</a></li>
+                    <li><a href="about.html" class="active">Sobre Nosotros</a></li>
+                    <li><a href="contact.html">Contacto</a></li>
+                </ul>
+                <div class="nav-guest">
+                    <button class="btn btn-outline" onclick="showLogin()">Iniciar Sesión</button>
+                    <button class="btn btn-primary" onclick="showRegister()">Registrarse</button>
+                </div>
+                <div class="nav-user" style="display: none;">
+                    <span class="user-name" id="userName"></span>
+                    <div class="dropdown">
+                        <button class="btn btn-outline dropdown-toggle">
+                            <i class="fas fa-user"></i>
+                        </button>
+                        <div class="dropdown-menu">
+                            <a href="profile.html">Mi Perfil</a>
+                            <a href="my-courses.html">Mis Cursos</a>
+                            <div class="admin-only" style="display: none;">
+                                <a href="admin.html">Panel Admin</a>
+                            </div>
+                            <hr>
+                            <a href="#" onclick="logout()">Cerrar Sesión</a>
+                        </div>
+                    </div>
+                </div>
+            </nav>
+        </div>
+    </header>
+
+    <!-- Main Content -->
+    <main class="main">
+        <section class="section active">
+            <div class="about-hero">
+                <div class="container">
+                    <h2>Sobre Code Academy</h2>
+                    <p>Formando a los desarrolladores del futuro</p>
+                </div>
+            </div>
+            
+            <div class="container">
+                <div class="about-content">
+                    <div class="about-section">
+                        <h3>Nuestra Historia</h3>
+                        <p>Code Academy nació en 2015 con una misión clara: democratizar la educación en programación y tecnología. Lo que comenzó como un pequeño grupo de entusiastas de la tecnología enseñando a amigos, se ha convertido en una plataforma educativa líder con miles de estudiantes en todo el mundo.</p>
+                        <p>Desde nuestros inicios, nos hemos comprometido a ofrecer educación de alta calidad que sea accesible para todos, independientemente de su ubicación o antecedentes. Creemos que la programación es una habilidad esencial en el mundo moderno y estamos dedicados a ayudar a las personas a dominarla.</p>
+                    </div>
+                    
+                    <div class="about-section">
+                        <h3>Nuestra Misión</h3>
+                        <p>En Code Academy, nuestra misión es empoderar a las personas para que transformen sus vidas a través de la educación en tecnología. Nos esforzamos por:</p>
+                        <ul class="about-list">
+                            <li><i class="fas fa-check-circle"></i> Proporcionar educación de alta calidad en programación y tecnología</li>
+                            <li><i class="fas fa-check-circle"></i> Hacer que el aprendizaje sea accesible para todos</li>
+                            <li><i class="fas fa-check-circle"></i> Mantenernos actualizados con las últimas tendencias y tecnologías</li>
+                            <li><i class="fas fa-check-circle"></i> Fomentar una comunidad de aprendizaje colaborativa</li>
+                            <li><i class="fas fa-check-circle"></i> Preparar a los estudiantes para carreras exitosas en tecnología</li>
+                        </ul>
+                    </div>
+                    
+                    <div class="about-section">
+                        <h3>Nuestro Equipo</h3>
+                        <div class="team-grid">
+                            <div class="team-member">
+                                <img src="/placeholder.svg?height=150&width=150" alt="Juan Pérez" class="team-image">
+                                <h4>Juan Pérez</h4>
+                                <p>Fundador & CEO</p>
+                            </div>
+                            <div class="team-member">
+                                <img src="/placeholder.svg?height=150&width=150" alt="María García" class="team-image">
+                                <h4>María García</h4>
+                                <p>Directora Académica</p>
+                            </div>
+                            <div class="team-member">
+                                <img src="/placeholder.svg?height=150&width=150" alt="Carlos Rodríguez" class="team-image">
+                                <h4>Carlos Rodríguez</h4>
+                                <p>Instructor Principal</p>
+                            </div>
+                            <div class="team-member">
+                                <img src="/placeholder.svg?height=150&width=150" alt="Ana López" class="team-image">
+                                <h4>Ana López</h4>
+                                <p>Desarrollo de Contenido</p>
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <div class="about-section">
+                        <h3>Por Qué Elegirnos</h3>
+                        <div class="features-grid">
+                            <div class="feature">
+                                <i class="fas fa-laptop-code"></i>
+                                <h4>Cursos Actualizados</h4>
+                                <p>Nuestros cursos se actualizan constantemente para reflejar las últimas tecnologías y prácticas de la industria.</p>
+                            </div>
+                            <div class="feature">
+                                <i class="fas fa-users"></i>
+                                <h4>Comunidad Activa</h4>
+                                <p>Forma parte de una comunidad vibrante de estudiantes y profesionales que comparten conocimientos y experiencias.</p>
+                            </div>
+                            <div class="feature">
+                                <i class="fas fa-certificate"></i>
+                                <h4>Certificaciones Reconocidas</h4>
+                                <p>Obtén certificaciones que son reconocidas por empresas líderes en tecnología.</p>
+                            </div>
+                            <div class="feature">
+                                <i class="fas fa-headset"></i>
+                                <h4>Soporte Personalizado</h4>
+                                <p>Recibe ayuda personalizada de nuestros instructores expertos cuando la necesites.</p>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </section>
+    </main>
+
+    <!-- Login Modal -->
+    <div id="loginModal" class="modal">
+        <div class="modal-content">
+            <span class="close" onclick="closeModal('loginModal')">&times;</span>
+            <h2>Iniciar Sesión</h2>
+            <form id="loginForm">
+                <div class="form-group">
+                    <label for="loginEmail">Correo Electrónico</label>
+                    <input type="email" id="loginEmail" required>
+                </div>
+                <div class="form-group">
+                    <label for="loginPassword">Contraseña</label>
+                    <input type="password" id="loginPassword" required>
+                </div>
+                <button type="submit" class="btn btn-primary btn-full">Iniciar Sesión</button>
+            </form>
+            <p>¿No tienes cuenta? <a href="#" onclick="showRegister()">Regístrate aquí</a></p>
+        </div>
+    </div>
+
+    <!-- Register Modal -->
+    <div id="registerModal" class="modal">
+        <div class="modal-content">
+            <span class="close" onclick="closeModal('registerModal')">&times;</span>
+            <h2>Registrarse</h2>
+            <form id="registerForm">
+                <div class="form-group">
+                    <label for="registerName">Nombre Completo</label>
+                    <input type="text" id="registerName" required>
+                </div>
+                <div class="form-group">
+                    <label for="registerEmail">Correo Electrónico</label>
+                    <input type="email" id="registerEmail" required>
+                </div>
+                <div class="form-group">
+                    <label for="registerPhone">Teléfono</label>
+                    <input type="tel" id="registerPhone" required>
+                </div>
+                <div class="form-group">
+                    <label for="registerCountry">País</label>
+                    <select id="registerCountry" required>
+                        <option value="">Seleccionar país</option>
+                        <option value="Argentina">Argentina</option>
+                        <option value="Chile">Chile</option>
+                        <option value="Colombia">Colombia</option>
+                        <option value="España">España</option>
+                        <option value="México">México</option>
+                        <option value="Perú">Perú</option>
+                        <option value="Venezuela">Venezuela</option>
+                    </select>
+                </div>
+                <div class="form-group">
+                    <label for="registerPassword">Contraseña</label>
+                    <input type="password" id="registerPassword" required>
+                </div>
+                <div class="form-group">
+                    <label for="confirmPassword">Confirmar Contraseña</label>
+                    <input type="password" id="confirmPassword" required>
+                </div>
+                <button type="submit" class="btn btn-primary btn-full">Registrarse</button>
+            </form>
+            <p>¿Ya tienes cuenta? <a href="#" onclick="showLogin()">Inicia sesión aquí</a></p>
+        </div>
+    </div>
+
+    <!-- Footer -->
+    <footer class="footer">
+        <div class="container">
+            <div class="footer-content">
+                <div class="footer-logo">
+                    <i class="fas fa-code"></i>
+                    <h2>Code Academy</h2>
+                </div>
+                <div class="footer-links">
+                    <h3>Enlaces Rápidos</h3>
+                    <ul>
+                        <li><a href="index.html">Inicio</a></li>
+                        <li><a href="courses.html">Cursos</a></li>
+                        <li><a href="about.html">Sobre Nosotros</a></li>
+                        <li><a href="contact.html">Contacto</a></li>
+                    </ul>
+                </div>
+                <div class="footer-contact">
+                    <h3>Contacto</h3>
+                    <p><i class="fas fa-map-marker-alt"></i> Calle Principal 123, Ciudad</p>
+                    <p><i class="fas fa-phone"></i> +123 456 7890</p>
+                    <p><i class="fas fa-envelope"></i> info@codeacademy.com</p>
+                </div>
+                <div class="footer-social">
+                    <h3>Síguenos</h3>
+                    <div class="social-icons">
+                        <a href="#"><i class="fab fa-facebook"></i></a>
+                        <a href="#"><i class="fab fa-twitter"></i></a>
+                        <a href="#"><i class="fab fa-instagram"></i></a>
+                        <a href="#"><i class="fab fa-linkedin"></i></a>
+                    </div>
+                </div>
+            </div>
+            <div class="footer-bottom">
+                <p>&copy; 2023 Code Academy. Todos los derechos reservados.</p>
+            </div>
+        </div>
+    </footer>
+
+    <script src="js/auth.js"></script>
+    <script src="js/common.js"></script>
+</body>
+</html>

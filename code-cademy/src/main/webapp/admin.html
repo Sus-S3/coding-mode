@@ -1,0 +1,233 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Code Academy - Panel de Administración</title>
+    <link rel="stylesheet" href="css/styles.css">
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css" rel="stylesheet">
+</head>
+<body>
+    <!-- Header -->
+    <header class="header">
+        <div class="container">
+            <div class="logo">
+                <i class="fas fa-code"></i>
+                <h1>Code Academy</h1>
+            </div>
+            <nav class="nav" id="nav">
+                <ul class="nav-links">
+                    <li><a href="index.html">Inicio</a></li>
+                    <li><a href="courses.html">Cursos</a></li>
+                    <li><a href="about.html">Sobre Nosotros</a></li>
+                    <li><a href="contact.html">Contacto</a></li>
+                </ul>
+                <div class="nav-guest">
+                    <button class="btn btn-outline" onclick="showLogin()">Iniciar Sesión</button>
+                    <button class="btn btn-primary" onclick="showRegister()">Registrarse</button>
+                </div>
+                <div class="nav-user" style="display: none;">
+                    <span class="user-name" id="userName"></span>
+                    <div class="dropdown">
+                        <button class="btn btn-outline dropdown-toggle">
+                            <i class="fas fa-user"></i>
+                        </button>
+                        <div class="dropdown-menu">
+                            <a href="profile.html">Mi Perfil</a>
+                            <a href="my-courses.html">Mis Cursos</a>
+                            <div class="admin-only" style="display: none;">
+                                <a href="admin.html">Panel Admin</a>
+                            </div>
+                            <hr>
+                            <a href="#" onclick="logout()">Cerrar Sesión</a>
+                        </div>
+                    </div>
+                </div>
+            </nav>
+        </div>
+    </header>
+
+    <!-- Main Content -->
+    <main class="main">
+        <section class="section active">
+            <div class="container">
+                <h2>Panel de Administración</h2>
+                <div class="admin-tabs">
+                    <button class="tab-btn active" onclick="showAdminTab('courses')">Gestionar Cursos</button>
+                    <button class="tab-btn" onclick="showAdminTab('enrollments')">Ver Inscripciones</button>
+                </div>
+                
+                <!-- Admin Courses Tab -->
+                <div id="adminCourses" class="admin-tab active">
+                    <div class="admin-header">
+                        <h3>Gestionar Cursos</h3>
+                        <button class="btn btn-primary" onclick="showAddCourse()">Agregar Curso</button>
+                    </div>
+                    <div class="admin-courses-list" id="adminCoursesList"></div>
+                </div>
+
+                <!-- Admin Enrollments Tab -->
+                <div id="adminEnrollments" class="admin-tab">
+                    <h3>Inscripciones de Usuarios</h3>
+                    <div class="enrollments-list" id="enrollmentsList"></div>
+                </div>
+            </div>
+        </section>
+    </main>
+
+    <!-- Login Modal -->
+    <div id="loginModal" class="modal">
+        <div class="modal-content">
+            <span class="close" onclick="closeModal('loginModal')">&times;</span>
+            <h2>Iniciar Sesión</h2>
+            <form id="loginForm">
+                <div class="form-group">
+                    <label for="loginEmail">Correo Electrónico</label>
+                    <input type="email" id="loginEmail" required>
+                </div>
+                <div class="form-group">
+                    <label for="loginPassword">Contraseña</label>
+                    <input type="password" id="loginPassword" required>
+                </div>
+                <button type="submit" class="btn btn-primary btn-full">Iniciar Sesión</button>
+            </form>
+            <p>¿No tienes cuenta? <a href="#" onclick="showRegister()">Regístrate aquí</a></p>
+        </div>
+    </div>
+
+    <!-- Register Modal -->
+    <div id="registerModal" class="modal">
+        <div class="modal-content">
+            <span class="close" onclick="closeModal('registerModal')">&times;</span>
+            <h2>Registrarse</h2>
+            <form id="registerForm">
+                <div class="form-group">
+                    <label for="registerName">Nombre Completo</label>
+                    <input type="text" id="registerName" required>
+                </div>
+                <div class="form-group">
+                    <label for="registerEmail">Correo Electrónico</label>
+                    <input type="email" id="registerEmail" required>
+                </div>
+                <div class="form-group">
+                    <label for="registerPhone">Teléfono</label>
+                    <input type="tel" id="registerPhone" required>
+                </div>
+                <div class="form-group">
+                    <label for="registerCountry">País</label>
+                    <select id="registerCountry" required>
+                        <option value="">Seleccionar país</option>
+                        <option value="Argentina">Argentina</option>
+                        <option value="Chile">Chile</option>
+                        <option value="Colombia">Colombia</option>
+                        <option value="España">España</option>
+                        <option value="México">México</option>
+                        <option value="Perú">Perú</option>
+                        <option value="Venezuela">Venezuela</option>
+                    </select>
+                </div>
+                <div class="form-group">
+                    <label for="registerPassword">Contraseña</label>
+                    <input type="password" id="registerPassword" required>
+                </div>
+                <div class="form-group">
+                    <label for="confirmPassword">Confirmar Contraseña</label>
+                    <input type="password" id="confirmPassword" required>
+                </div>
+                <button type="submit" class="btn btn-primary btn-full">Registrarse</button>
+            </form>
+            <p>¿Ya tienes cuenta? <a href="#" onclick="showLogin()">Inicia sesión aquí</a></p>
+        </div>
+    </div>
+
+    <!-- Add Course Modal -->
+    <div id="addCourseModal" class="modal">
+        <div class="modal-content">
+            <span class="close" onclick="closeModal('addCourseModal')">&times;</span>
+            <h3 id="courseModalTitle">Agregar Curso</h3>
+            <form id="courseForm">
+                <input type="hidden" id="courseId">
+                <div class="form-group">
+                    <label for="courseName">Nombre del Curso</label>
+                    <input type="text" id="courseName" required>
+                </div>
+                <div class="form-group">
+                    <label for="courseDescription">Descripción</label>
+                    <textarea id="courseDescription" required></textarea>
+                </div>
+                <div class="form-group">
+                    <label for="courseCategory">Categoría</label>
+                    <select id="courseCategory" required>
+                        <option value="Frontend">Frontend</option>
+                        <option value="Backend">Backend</option>
+                        <option value="Mobile">Mobile</option>
+                        <option value="Data Science">Data Science</option>
+                    </select>
+                </div>
+                <div class="form-group">
+                    <label for="courseStatus">Estado</label>
+                    <select id="courseStatus" required>
+                        <option value="Activo">Activo</option>
+                        <option value="Inactivo">Inactivo</option>
+                    </select>
+                </div>
+                <div class="form-group">
+                    <label for="courseImage">URL de Imagen</label>
+                    <input type="url" id="courseImage" required>
+                </div>
+                <div class="form-group">
+                    <label for="courseDuration">Duración (horas)</label>
+                    <input type="number" id="courseDuration" required>
+                </div>
+                <div class="form-actions">
+                    <button type="submit" class="btn btn-primary">Guardar Curso</button>
+                    <button type="button" class="btn btn-secondary" onclick="closeModal('addCourseModal')">Cancelar</button>
+                </div>
+            </form>
+        </div>
+    </div>
+
+    <!-- Footer -->
+    <footer class="footer">
+        <div class="container">
+            <div class="footer-content">
+                <div class="footer-logo">
+                    <i class="fas fa-code"></i>
+                    <h2>Code Academy</h2>
+                </div>
+                <div class="footer-links">
+                    <h3>Enlaces Rápidos</h3>
+                    <ul>
+                        <li><a href="index.html">Inicio</a></li>
+                        <li><a href="courses.html">Cursos</a></li>
+                        <li><a href="about.html">Sobre Nosotros</a></li>
+                        <li><a href="contact.html">Contacto</a></li>
+                    </ul>
+                </div>
+                <div class="footer-contact">
+                    <h3>Contacto</h3>
+                    <p><i class="fas fa-map-marker-alt"></i> Calle Principal 123, Ciudad</p>
+                    <p><i class="fas fa-phone"></i> +123 456 7890</p>
+                    <p><i class="fas fa-envelope"></i> info@codeacademy.com</p>
+                </div>
+                <div class="footer-social">
+                    <h3>Síguenos</h3>
+                    <div class="social-icons">
+                        <a href="#"><i class="fab fa-facebook"></i></a>
+                        <a href="#"><i class="fab fa-twitter"></i></a>
+                        <a href="#"><i class="fab fa-instagram"></i></a>
+                        <a href="#"><i class="fab fa-linkedin"></i></a>
+                    </div>
+                </div>
+            </div>
+            <div class="footer-bottom">
+                <p>&copy; 2023 Code Academy. Todos los derechos reservados.</p>
+            </div>
+        </div>
+    </footer>
+
+    <script src="js/auth.js"></script>
+    <script src="js/common.js"></script>
+    <script src="js/admin.js"></script>
+</body>
+</html>
