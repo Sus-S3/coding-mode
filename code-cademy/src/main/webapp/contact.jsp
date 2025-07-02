@@ -24,7 +24,7 @@
 
             <div class="nav-links">
                 <a href="index.jsp" class="nav-link">Inicio</a>
-                <a href="courses.jsp" class="nav-link">Cursos</a>
+                <a href="cursos" class="nav-link">Cursos</a>
                 <a href="about.jsp" class="nav-link">Sobre Nosotros</a>
                 <a href="contact.jsp" class="nav-link active">Contacto</a>
             </div>

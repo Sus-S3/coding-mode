@@ -123,7 +123,7 @@
                 if (success) {
                     showToast('¡Registro exitoso!', 'Tu cuenta ha sido creada correctamente.', 'success');
                     setTimeout(() => {
-                        window.location.href = 'dashboard.jsp';
+                        window.location.href = 'dashboard';
                     }, 1000);
                 } else {
                     showToast('Error', 'El correo ya está registrado.', 'error');

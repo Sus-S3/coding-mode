@@ -82,7 +82,7 @@
                 if (success) {
                     showToast('¡Bienvenido!', 'Has iniciado sesión correctamente.', 'success');
                     setTimeout(() => {
-                        window.location.href = 'dashboard.jsp';
+                        window.location.href = 'dashboard';
                     }, 1000);
                 } else {
                     showToast('Error', 'Credenciales incorrectas. Intenta de nuevo.', 'error');

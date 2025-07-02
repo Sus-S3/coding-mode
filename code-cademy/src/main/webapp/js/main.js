@@ -20,7 +20,7 @@ function checkAuthState() {
   updateNavbarAuth(currentUser)
 
   // Redirect if authentication required
-  const protectedPages = ["dashboard.jsp", "profile.jsp"]
+  const protectedPages = ["dashboard", "profile.jsp"]
   const currentPage = window.location.pathname.split("/").pop()
 
   if (protectedPages.includes(currentPage) && !currentUser) {
@@ -31,7 +31,7 @@ function checkAuthState() {
   // Redirect authenticated users away from auth pages
   const authPages = ["login.jsp", "register.jsp"]
   if (authPages.includes(currentPage) && currentUser) {
-    window.location.href = "dashboard.jsp"
+    window.location.href = "dashboard"
     return
   }
 }
@@ -44,7 +44,7 @@ function updateNavbarAuth(user) {
     navAuth.innerHTML = `
             <div class="user-menu">
                 <span class="user-name">${user.nombre}</span>
-                <a href="dashboard.jsp" class="btn btn-ghost">Dashboard</a>
+                <a href="dashboard" class="btn btn-ghost">Dashboard</a>
                 <a href="profile.jsp" class="btn btn-ghost">Perfil</a>
                 <button onclick="handleLogout()" class="btn btn-ghost">Cerrar Sesión</button>
             </div>
@@ -69,12 +69,9 @@ function initPageFunctionality() {
   const currentPage = window.location.pathname.split("/").pop()
 
   switch (currentPage) {
-    case "courses.jsp":
-      initCourses()
-      break
-    case "dashboard.jsp":
-      initDashboard()
-      break
+    // case "dashboard":
+    //   initDashboard()
+    //   break
     case "profile.jsp":
       initProfile()
       break
@@ -101,51 +98,7 @@ function initCommonComponents() {
   })
 }
 
-// Courses page functionality
-function initCourses() {
-  const currentUser = Auth.getCurrentUser()
-  const allCourses = Data.getActiveCourses()
-  let userEnrollments = currentUser ? Data.getUserEnrollments(currentUser.id) : []
 
-  // Load category filter
-  loadCategoryFilter(allCourses)
-
-  // Display courses
-  displayCourses(allCourses, userEnrollments)
-
-  // Category filter event
-  document.getElementById("categoryFilter").addEventListener("change", (e) => {
-    const selectedCategory = e.target.value
-    const filteredCourses =
-      selectedCategory === "todas" ? allCourses : allCourses.filter((course) => course.categoria === selectedCategory)
-    displayCourses(filteredCourses, userEnrollments)
-  })
-
-  // Global enroll function
-  window.enrollInCourse = (courseId) => {
-    if (!currentUser) {
-      showToast("Inicia sesión", "Debes iniciar sesión para inscribirte a un curso.", "error")
-      return
-    }
-
-    const enrolledCourseIds = userEnrollments.map((enrollment) => enrollment.id_curso)
-    if (enrolledCourseIds.includes(courseId)) {
-      showToast("Ya inscrito", "Ya estás inscrito en este curso.", "error")
-      return
-    }
-
-    Data.enrollInCourse(courseId, currentUser.id)
-    userEnrollments = Data.getUserEnrollments(currentUser.id)
-    showToast("¡Inscripción exitosa!", "Te has inscrito correctamente al curso.", "success")
-
-    // Refresh display
-    const categoryFilter = document.getElementById("categoryFilter")
-    const selectedCategory = categoryFilter.value
-    const filteredCourses =
-      selectedCategory === "todas" ? allCourses : allCourses.filter((course) => course.categoria === selectedCategory)
-    displayCourses(filteredCourses, userEnrollments)
-  }
-}
 
 function loadCategoryFilter(courses) {
   const categories = [...new Set(courses.map((course) => course.categoria))]
