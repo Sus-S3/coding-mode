@@ -70,4 +70,71 @@ public class CursoDAO {
         }
         return categorias;
     }
+
+    public void eliminar(int idCurso) {
+        String sql = "DELETE FROM curso WHERE idCurso = ?";
+        try (Connection conn = ConexionBD.getConnection();
+             PreparedStatement stmt = conn.prepareStatement(sql)) {
+            stmt.setInt(1, idCurso);
+            stmt.executeUpdate();
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+    }
+
+    public Curso obtenerPorId(int idCurso) {
+        String sql = "SELECT * FROM curso WHERE idCurso = ?";
+        try (Connection conn = ConexionBD.getConnection();
+             PreparedStatement stmt = conn.prepareStatement(sql)) {
+            stmt.setInt(1, idCurso);
+            try (ResultSet rs = stmt.executeQuery()) {
+                if (rs.next()) {
+                    Curso curso = new Curso();
+                    curso.setIdCurso(rs.getInt("idCurso"));
+                    curso.setNombre(rs.getString("nombre"));
+                    curso.setDescripcion(rs.getString("descripcion"));
+                    curso.setCategoria(rs.getString("categoria"));
+                    curso.setEstado(rs.getString("estado"));
+                    curso.setDuracion(rs.getString("duracion"));
+                    curso.setImagen(rs.getBytes("imagen"));
+                    return curso;
+                }
+            }
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+        return null;
+    }
+
+    public void actualizar(Curso curso) {
+        String sql = "UPDATE curso SET nombre=?, descripcion=?, categoria=?, estado=?, duracion=? WHERE idCurso=?";
+        try (Connection conn = ConexionBD.getConnection();
+             PreparedStatement stmt = conn.prepareStatement(sql)) {
+            stmt.setString(1, curso.getNombre());
+            stmt.setString(2, curso.getDescripcion());
+            stmt.setString(3, curso.getCategoria());
+            stmt.setString(4, curso.getEstado());
+            stmt.setString(5, curso.getDuracion());
+            stmt.setInt(6, curso.getIdCurso());
+            stmt.executeUpdate();
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+    }
+
+    public void agregar(Curso curso) {
+        String sql = "INSERT INTO curso (nombre, descripcion, categoria, estado, duracion, imagen) VALUES (?, ?, ?, ?, ?, ?)";
+        try (Connection conn = ConexionBD.getConnection();
+             PreparedStatement stmt = conn.prepareStatement(sql)) {
+            stmt.setString(1, curso.getNombre());
+            stmt.setString(2, curso.getDescripcion());
+            stmt.setString(3, curso.getCategoria());
+            stmt.setString(4, curso.getEstado());
+            stmt.setString(5, curso.getDuracion());
+            stmt.setBytes(6, curso.getImagen());
+            stmt.executeUpdate();
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+    }
 }

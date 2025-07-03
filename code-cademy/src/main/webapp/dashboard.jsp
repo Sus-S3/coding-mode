@@ -65,6 +65,7 @@
                 </div>
                 <div class="stat-value">0</div> <!-- Puedes reemplazar por el valor real si lo tienes -->
             </div>
+            <!-- Cursos Activos -->
             <div class="stat-card">
                 <div class="stat-header">
                     <span class="stat-title">Cursos Activos</span>
@@ -76,10 +77,10 @@
                     </svg>
                 </div>
                 <div class="stat-value">
-                    <c:set var="activos" value="0" />
+                    <c:set var="activos" value="0" scope="page"/>
                     <c:forEach var="curso" items="${cursos}">
-                        <c:if test="${curso.estado == 'activo'}">
-                            <c:set var="activos" value="${activos + 1}" />
+                        <c:if test="${fn:toLowerCase(fn:trim(curso.estado)) == 'activo'}">
+                            <c:set var="activos" value="${activos + 1}" scope="page"/>
                         </c:if>
                     </c:forEach>
                     ${activos}
@@ -116,11 +117,8 @@
                                         <h3 class="course-title">${curso.nombre}</h3>
                                         <p class="course-description">${curso.descripcion}</p>
                                         <div class="course-actions">
-                                            <a href="editarCurso?id=${curso.idCurso}" class="btn btn-outline">Editar</a>
-                                            <form action="eliminarCurso" method="post" style="display:inline;">
-                                                <input type="hidden" name="idCurso" value="${curso.idCurso}" />
-                                                <button type="submit" class="btn btn-destructive" onclick="return confirm('¿Seguro que deseas eliminar este curso?')">Eliminar</button>
-                                            </form>
+                                            <button type="button" class="btn btn-outline" onclick="openEditModal('${curso.idCurso}', '${curso.nombre}', '${curso.descripcion}', '${curso.categoria}', '${curso.estado}', '${curso.duracion}')">Editar</button>
+                                            <button type="button" class="btn btn-destructive" onclick="openDeleteModal('${curso.idCurso}')">Eliminar</button>
                                         </div>
                                     </div>
                                 </div>
@@ -143,6 +141,108 @@
         </div>
     </div>
 
+    <!-- Modal Editar Curso -->
+    <div id="editCourseModal" class="modal-overlay" style="display:none;">
+        <div class="modal-content" style="max-width: 400px; margin: 0 auto; border-radius: 12px;">
+            <div class="auth-card">
+                <div class="auth-header">
+                    <h2 class="auth-title" style="margin-bottom: 0.5rem;">Editar Curso</h2>
+                    <p class="auth-description" style="margin-bottom: 1.5rem;">Modifica los datos del curso y guarda los cambios</p>
+                </div>
+                <form id="editCourseForm" method="post" action="editarCurso" class="auth-form">
+                    <input type="hidden" name="idCurso" id="editIdCurso">
+                    <div class="form-group">
+                        <label for="editNombre" class="form-label">Nombre</label>
+                        <input type="text" name="nombre" id="editNombre" class="form-input" required>
+                    </div>
+                    <div class="form-group">
+                        <label for="editDescripcion" class="form-label">Descripción</label>
+                        <textarea name="descripcion" id="editDescripcion" class="form-textarea" required></textarea>
+                    </div>
+                    <div class="form-group">
+                        <label for="editCategoria" class="form-label">Categoría</label>
+                        <input type="text" name="categoria" id="editCategoria" class="form-input" required>
+                    </div>
+                    <div class="form-group">
+                        <label for="editEstado" class="form-label">Estado</label>
+                        <select name="estado" id="editEstado" class="form-select" required>
+                            <option value="activo">Activo</option>
+                            <option value="inactivo">Inactivo</option>
+                        </select>
+                    </div>
+                    <div class="form-group">
+                        <label for="editDuracion" class="form-label">Duración</label>
+                        <input type="text" name="duracion" id="editDuracion" class="form-input" required>
+                    </div>
+                    <div class="modal-actions" style="display: flex; gap: 1rem; margin-top: 1.5rem;">
+                        <button type="button" class="btn btn-ghost" onclick="closeEditModal()">Cancelar</button>
+                        <button type="submit" class="btn btn-primary">Guardar Cambios</button>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+
+    <!-- Modal Confirmar Eliminación -->
+    <div id="deleteCourseModal" class="modal-overlay" style="display:none;">
+        <div class="modal-content">
+            <h2>Eliminar Curso</h2>
+            <p>¿Estás seguro de que deseas eliminar este curso?</p>
+            <form id="deleteCourseForm" method="post" action="eliminarCurso">
+                <input type="hidden" name="idCurso" id="deleteIdCurso">
+                <div class="modal-actions">
+                    <button type="button" class="btn btn-ghost" onclick="closeDeleteModal()">Cancelar</button>
+                    <button type="submit" class="btn btn-destructive">Eliminar</button>
+                </div>
+            </form>
+        </div>
+    </div>
+
+    <!-- Modal Nuevo Curso -->
+    <div id="newCourseModal" class="modal-overlay" style="display:none;">
+        <div class="modal-content" style="max-width: 400px; margin: 0 auto; border-radius: 12px;">
+            <div class="auth-card">
+                <div class="auth-header">
+                    <h2 class="auth-title" style="margin-bottom: 0.5rem;">Nuevo Curso</h2>
+                    <p class="auth-description" style="margin-bottom: 1.5rem;">Completa los datos para crear un nuevo curso</p>
+                </div>
+                <form id="newCourseForm" method="post" action="nuevoCurso" class="auth-form" enctype="multipart/form-data">
+                    <div class="form-group">
+                        <label for="newNombre" class="form-label">Nombre</label>
+                        <input type="text" name="nombre" id="newNombre" class="form-input" required>
+                    </div>
+                    <div class="form-group">
+                        <label for="newDescripcion" class="form-label">Descripción</label>
+                        <textarea name="descripcion" id="newDescripcion" class="form-textarea" required></textarea>
+                    </div>
+                    <div class="form-group">
+                        <label for="newCategoria" class="form-label">Categoría</label>
+                        <input type="text" name="categoria" id="newCategoria" class="form-input" required>
+                    </div>
+                    <div class="form-group">
+                        <label for="newEstado" class="form-label">Estado</label>
+                        <select name="estado" id="newEstado" class="form-select" required>
+                            <option value="activo">Activo</option>
+                            <option value="inactivo">Inactivo</option>
+                        </select>
+                    </div>
+                    <div class="form-group">
+                        <label for="newDuracion" class="form-label">Duración</label>
+                        <input type="text" name="duracion" id="newDuracion" class="form-input" required>
+                    </div>
+                    <div class="form-group">
+                        <label for="newImagen" class="form-label">Imagen</label>
+                        <input type="file" name="imagen" id="newImagen" class="form-input" accept="image/*" required>
+                    </div>
+                    <div class="modal-actions" style="display: flex; gap: 1rem; margin-top: 1.5rem;">
+                        <button type="button" class="btn btn-ghost" onclick="closeNewCourseModal()">Cancelar</button>
+                        <button type="submit" class="btn btn-primary">Crear Curso</button>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+
     <!-- Toast Container -->
     <div id="toastContainer" class="toast-container"></div>
 
@@ -150,6 +250,42 @@
     <script src="js/data.js"></script>
     <script src="js/utils.js"></script>
     <script src="js/main.js"></script>
+    <script>
+function openEditModal(id, nombre, descripcion, categoria, estado, duracion) {
+    document.getElementById('editIdCurso').value = id;
+    document.getElementById('editNombre').value = nombre;
+    document.getElementById('editDescripcion').value = descripcion;
+    document.getElementById('editCategoria').value = categoria;
+    document.getElementById('editEstado').value = estado;
+    document.getElementById('editDuracion').value = duracion;
+    document.getElementById('editCourseModal').style.display = 'flex';
+}
+function closeEditModal() {
+    document.getElementById('editCourseModal').style.display = 'none';
+}
+
+function openDeleteModal(id) {
+    document.getElementById('deleteIdCurso').value = id;
+    document.getElementById('deleteCourseModal').style.display = 'flex';
+}
+function closeDeleteModal() {
+    document.getElementById('deleteCourseModal').style.display = 'none';
+}
+
+function openCourseModal() {
+    document.getElementById('newCourseModal').style.display = 'flex';
+}
+function closeNewCourseModal() {
+    document.getElementById('newCourseModal').style.display = 'none';
+}
+
+// Cierra el modal si se hace click fuera del contenido
+window.onclick = function(event) {
+    if (event.target.classList.contains('modal-overlay')) {
+        event.target.style.display = 'none';
+    }
+}
+</script>
     <script>
 document.querySelectorAll('.tabs-trigger').forEach(btn => {
     btn.addEventListener('click', function() {
