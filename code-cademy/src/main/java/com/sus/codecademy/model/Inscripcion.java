@@ -7,13 +7,19 @@ public class Inscripcion {
     private int idUsuario;
     private int idCurso;
     private Date fechaInscripcion;
+    private String estado;
 
-    // Constructor
-    public Inscripcion(int idInscripcion, int idUsuario, int idCurso, Date fechaInscripcion) {
+    // Constructor vacío
+    public Inscripcion() {
+    }
+
+    // Constructor con parámetros
+    public Inscripcion(int idInscripcion, int idUsuario, int idCurso, Date fechaInscripcion, String estado) {
         this.idInscripcion = idInscripcion;
         this.idUsuario = idUsuario;
         this.idCurso = idCurso;
         this.fechaInscripcion = fechaInscripcion;
+        this.estado = estado;
     }
 
     // Getters
@@ -33,6 +39,10 @@ public class Inscripcion {
         return fechaInscripcion;
     }
 
+    public String getEstado() {
+        return estado;
+    }
+
     // Setters
     public void setIdInscripcion(int idInscripcion) {
         this.idInscripcion = idInscripcion;
@@ -50,99 +60,18 @@ public class Inscripcion {
         this.fechaInscripcion = fechaInscripcion;
     }
 
-    public class Usuario {
-        private int idUsuario;
-        private String nombre;
-        private String correo;
-        private String telefono;
-        private String pais;
-        private String rol;
-        private String password;
+    public void setEstado(String estado) {
+        this.estado = estado;
+    }
 
-        // Constructor vacío
-        public Usuario() {
-        }
-
-        // Constructor con parámetros
-        public Usuario(int idUsuario, String nombre, String correo, String telefono, String pais, String rol, String password) {
-            this.idUsuario = idUsuario;
-            this.nombre = nombre;
-            this.correo = correo;
-            this.telefono = telefono;
-            this.pais = pais;
-            this.rol = rol;
-            this.password = password;
-        }
-
-        // Getters y setters
-        public int getIdUsuario() {
-            return idUsuario;
-        }
-
-        public String getNombre() {
-            return nombre;
-        }
-
-        public String getCorreo() {
-            return correo;
-        }
-
-        public String getTelefono() {
-            return telefono;
-        }
-
-        public String getPais() {
-            return pais;
-        }
-
-        public String getRol() {
-            return rol;
-        }
-
-        public String getPassword() {
-            return password;
-        }
-
-        public void setIdUsuario(int idUsuario) {
-            this.idUsuario = idUsuario;
-        }
-
-        public void setNombre(String nombre) {
-            this.nombre = nombre;
-        }
-
-        public void setCorreo(String correo) {
-            this.correo = correo;
-        }
-
-        public void setTelefono(String telefono) {
-            this.telefono = telefono;
-        }
-
-        public void setPais(String pais) {
-            this.pais = pais;
-        }
-
-        public void setRol(String rol) {
-            this.rol = rol;
-        }
-
-        public void setPassword(String password) {
-            this.password = password;
-        }
-
-        // toString
-        @Override
-        public String toString() {
-            return "Usuario{" +
-                    "idUsuario=" + idUsuario +
-                    ", nombre='" + nombre + '\'' +
-                    ", correo='" + correo + '\'' +
-                    ", telefono='" + telefono + '\'' +
-                    ", pais='" + pais + '\'' +
-                    ", rol='" + rol + '\'' +
-                    ", password='" + password + '\'' +
-                    '}';
-        }
+    @Override
+    public String toString() {
+        return "Inscripcion{" +
+                "idInscripcion=" + idInscripcion +
+                ", idUsuario=" + idUsuario +
+                ", idCurso=" + idCurso +
+                ", fechaInscripcion=" + fechaInscripcion +
+                ", estado='" + estado + '\'' +
+                '}';
     }
 }

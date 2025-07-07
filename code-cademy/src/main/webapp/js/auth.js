@@ -1,144 +1,168 @@
 class AuthManager {
   constructor() {
-    this.currentUser = null
-    this.init()
+    this.currentUser = null;
+    this.init();
   }
 
-  init() {
-    // Crear admin predeterminado si no existe
-    this.createDefaultAdmin()
-
-    // Cargar usuario actual
-    const savedUser = localStorage.getItem("currentUser")
-    if (savedUser) {
-      this.currentUser = JSON.parse(savedUser)
-    }
+  async init() {
+    // Verificar estado de sesión del servidor
+    await this.checkSessionStatus();
   }
 
-  createDefaultAdmin() {
-    const users = JSON.parse(localStorage.getItem("users") || "[]")
-    const adminExists = users.find((u) => u.correo === "admin@codeacademy.com")
-
-    if (!adminExists) {
-      const adminUser = {
-        id: "admin-001",
-        nombre: "Administrador",
-        correo: "admin@codeacademy.com",
-        telefono: "+1234567890",
-        pais: "México",
-        rol: "administrador",
-        password: "admin123",
+  async checkSessionStatus() {
+    try {
+      const response = await fetch('session-status');
+      const data = await response.json();
+      
+      if (data.authenticated) {
+        this.currentUser = {
+          id: data.id,
+          nombre: data.nombre,
+          email: data.email,
+          rol: data.rol,
+          isAdmin: data.isAdmin
+        };
+        this.updateNavigation();
+      } else {
+        this.currentUser = null;
+        this.updateNavigation();
       }
-      users.push(adminUser)
-      localStorage.setItem("users", JSON.stringify(users))
+    } catch (error) {
+      console.error('Error checking session status:', error);
+      this.currentUser = null;
+      this.updateNavigation();
     }
   }
 
-  async login(correo, password) {
-    const users = JSON.parse(localStorage.getItem("users") || "[]")
-    const foundUser = users.find((u) => u.correo === correo && u.password === password)
-
-    if (foundUser) {
-      const { password: _, ...userWithoutPassword } = foundUser
-      this.currentUser = userWithoutPassword
-      localStorage.setItem("currentUser", JSON.stringify(userWithoutPassword))
-      return true
+  updateNavigation() {
+    const navAuth = document.getElementById('navAuth');
+    
+    if (!navAuth) {
+      return;
     }
-    return false
+
+    if (this.currentUser) {
+      // Usuario autenticado
+      navAuth.innerHTML = `
+        <div class="user-menu">
+          <span class="user-name">Hola, ${this.currentUser.nombre}</span>
+          <div class="user-dropdown">
+            <a href="profile.jsp" class="dropdown-item">Mi Perfil</a>
+            ${this.currentUser.isAdmin ? '<a href="dashboard" class="dropdown-item">Dashboard</a>' : ''}
+            <button onclick="Auth.logout()" class="dropdown-item">Cerrar Sesión</button>
+          </div>
+        </div>
+      `;
+    } else {
+      // Usuario no autenticado
+      navAuth.innerHTML = `
+        <a href="login.jsp" class="btn btn-ghost">Iniciar Sesión</a>
+        <a href="register.jsp" class="btn btn-primary">Registrarse</a>
+      `;
+    }
+  }
+
+  async login(email, password) {
+    try {
+      const formData = new URLSearchParams();
+      formData.append('email', email);
+      formData.append('password', password);
+      
+      const response = await fetch('login', {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/x-www-form-urlencoded',
+        },
+        body: formData.toString()
+      });
+      
+      const data = await response.json();
+      
+      if (data.success) {
+        // Actualizar estado de sesión
+        await this.checkSessionStatus();
+        return { success: true, redirect: data.redirect };
+      } else {
+        return { success: false, message: data.message };
+      }
+    } catch (error) {
+      console.error('Error during login:', error);
+      return { success: false, message: 'Error de conexión' };
+    }
   }
 
   async register(userData) {
-    const users = JSON.parse(localStorage.getItem("users") || "[]")
-    const existingUser = users.find((u) => u.correo === userData.email)
-
-    if (existingUser) {
-      return false // Usuario ya existe
+    try {
+      const formData = new URLSearchParams();
+      formData.append('nombre', userData.nombre);
+      formData.append('email', userData.email);
+      formData.append('telefono', userData.telefono);
+      formData.append('pais', userData.pais);
+      formData.append('password', userData.password);
+      
+      const response = await fetch('register', {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/x-www-form-urlencoded',
+        },
+        body: formData.toString()
+      });
+      
+      const data = await response.json();
+      
+      if (data.success) {
+        // Actualizar estado de sesión
+        await this.checkSessionStatus();
+        return { success: true, redirect: data.redirect };
+      } else {
+        return { success: false, message: data.message };
+      }
+    } catch (error) {
+      console.error('Error during registration:', error);
+      return { success: false, message: 'Error de conexión' };
     }
-
-    const newUser = {
-      id: Date.now().toString(),
-      nombre: userData.nombre,
-      correo: userData.email,
-      telefono: userData.telefono,
-      pais: userData.pais,
-      rol: "estudiante",
-      password: userData.password,
-    }
-
-    users.push(newUser)
-    localStorage.setItem("users", JSON.stringify(users))
-
-    const { password: _, ...userWithoutPassword } = newUser
-    this.currentUser = userWithoutPassword
-    localStorage.setItem("currentUser", JSON.stringify(userWithoutPassword))
-    return true
   }
 
-  logout() {
-    this.currentUser = null
-    localStorage.removeItem("currentUser")
+  async logout() {
+    try {
+      const response = await fetch('logout', {
+        method: 'POST'
+      });
+      
+      const data = await response.json();
+      
+      if (data.success) {
+        this.currentUser = null;
+        this.updateNavigation();
+        // Redirigir al index
+        window.location.href = 'index.jsp';
+      }
+    } catch (error) {
+      console.error('Error during logout:', error);
+      // Forzar logout local
+      this.currentUser = null;
+      this.updateNavigation();
+      window.location.href = 'index.jsp';
+    }
   }
 
   getCurrentUser() {
-    return this.currentUser
-  }
-
-  updateProfile(userData) {
-    if (!this.currentUser) return false
-
-    const updatedUser = { ...this.currentUser, ...userData }
-    this.currentUser = updatedUser
-    localStorage.setItem("currentUser", JSON.stringify(updatedUser))
-
-    // Actualizar en la lista de usuarios
-    const users = JSON.parse(localStorage.getItem("users") || "[]")
-    const userIndex = users.findIndex((u) => u.id === this.currentUser.id)
-    if (userIndex !== -1) {
-      users[userIndex] = { ...users[userIndex], ...userData }
-      localStorage.setItem("users", JSON.stringify(users))
-    }
-    return true
-  }
-
-  async changePassword(currentPassword, newPassword) {
-    if (!this.currentUser) return false
-
-    const users = JSON.parse(localStorage.getItem("users") || "[]")
-    const userIndex = users.findIndex((u) => u.id === this.currentUser.id)
-
-    if (userIndex === -1) return false
-
-    // Verificar contraseña actual
-    if (users[userIndex].password !== currentPassword) {
-      return false
-    }
-
-    // Actualizar contraseña
-    users[userIndex].password = newPassword
-    localStorage.setItem("users", JSON.stringify(users))
-    return true
-  }
-
-  deleteProfile() {
-    if (!this.currentUser) return false
-
-    // Eliminar de la lista de usuarios
-    const users = JSON.parse(localStorage.getItem("users") || "[]")
-    const filteredUsers = users.filter((u) => u.id !== this.currentUser.id)
-    localStorage.setItem("users", JSON.stringify(filteredUsers))
-
-    this.logout()
-    return true
+    return this.currentUser;
   }
 
   isAuthenticated() {
-    return this.currentUser !== null
+    return this.currentUser !== null;
   }
 
   isAdmin() {
-    return this.currentUser && this.currentUser.rol === "administrador"
+    return this.currentUser && this.currentUser.isAdmin;
   }
 }
 
 // Instancia global
-const Auth = new AuthManager()
+const Auth = new AuthManager();
+
+// Verificar sesión al cargar la página
+document.addEventListener('DOMContentLoaded', () => {
+  Auth.checkSessionStatus();
+});

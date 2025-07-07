@@ -49,7 +49,7 @@
                     Únete a miles de estudiantes que han transformado sus carreras con nuestros cursos de programación
                 </p>
                 <div class="hero-buttons">
-                    <a href="courses.jsp" class="btn btn-yellow btn-lg">Ver Cursos</a>
+                    <a href="cursos" class="btn btn-yellow btn-lg">Ver Cursos</a>
                     <a href="register.jsp" class="btn btn-outline btn-lg">Registrarse Gratis</a>
                 </div>
             </div>

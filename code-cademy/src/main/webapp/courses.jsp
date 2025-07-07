@@ -26,14 +26,13 @@
 
             <div class="nav-links">
                 <a href="index.jsp" class="nav-link">Inicio</a>
-                <a href="courses.jsp" class="nav-link active">Cursos</a>
+                <a href="cursos" class="nav-link active">Cursos</a>
                 <a href="about.jsp" class="nav-link">Sobre Nosotros</a>
                 <a href="contact.jsp" class="nav-link">Contacto</a>
             </div>
 
             <div class="nav-auth" id="navAuth">
-                <a href="login.jsp" class="btn btn-ghost">Iniciar Sesión</a>
-                <a href="register.jsp" class="btn btn-primary">Registrarse</a>
+                <!-- Se carga dinámicamente -->
             </div>
         </div>
     </nav>
@@ -42,6 +41,8 @@
         <div class="page-header">
             <h1 class="page-title">Cursos Disponibles</h1>
             <p class="page-description">Explora nuestra amplia selección de cursos de programación</p>
+            
+
             
             <form method="get" action="cursos" class="filter-section">
                 <label for="categoryFilter" class="filter-label">Filtrar por categoría:</label>
@@ -69,7 +70,7 @@
                                 </div>
                                 <h3 class="course-title">${curso.nombre}</h3>
                                 <p class="course-description">${curso.descripcion}</p>
-                                <a href="login.jsp" class="btn btn-primary">Inscribirme</a>
+                                <button onclick="inscribirseEnCurso(${curso.idCurso})" class="btn btn-primary enroll-btn" data-curso-id="${curso.idCurso}">Inscribirme</button>
                             </div>
                         </div>
                     </c:forEach>
@@ -86,15 +87,6 @@
                 </c:otherwise>
             </c:choose>
         </div>
-
-        <div id="noCourses" class="no-content" style="display: none;">
-            <svg class="no-content-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor">
-                <path d="M2 3h6a4 4 0 0 1 4 4v14a3 3 0 0 0-3-3H2z"/>
-                <path d="M22 3h-6a4 4 0 0 0-4 4v14a3 3 0 0 1 3-3h7z"/>
-            </svg>
-            <h3>No hay cursos disponibles</h3>
-            <p>No se encontraron cursos para la categoría seleccionada.</p>
-        </div>
     </div>
 
     <!-- Toast Container -->
@@ -104,5 +96,80 @@
     <script src="js/data.js"></script>
     <script src="js/utils.js"></script>
     <script src="js/main.js"></script>
+    
+    <script>
+        async function inscribirseEnCurso(cursoId) {
+            // Verificar si el usuario está autenticado
+            if (!Auth.isAuthenticated()) {
+                showToast('Autenticación requerida', 'Debes iniciar sesión para inscribirte en cursos', 'warning');
+                setTimeout(() => {
+                    window.location.href = 'login.jsp';
+                }, 2000);
+                return;
+            }
+
+            try {
+                const formData = new URLSearchParams();
+                formData.append('cursoId', cursoId);
+                console.log('Enviando inscripción:', formData.toString());
+                console.log('cursoId:', cursoId);
+                
+                const response = await fetch('inscribir-curso', {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/x-www-form-urlencoded',
+                    },
+                    body: formData.toString()
+                });
+                
+                const data = await response.json();
+                
+                if (data.success) {
+                    showToast('¡Éxito!', data.message, 'success');
+                    // Cambiar el botón a "Inscrito" y deshabilitarlo
+                    const button = document.querySelector(`button[data-curso-id="${cursoId}"]`);
+                    if (button) {
+                        button.textContent = 'Inscrito';
+                        button.disabled = true;
+                        button.classList.remove('btn-primary');
+                        button.classList.add('btn-secondary');
+                        button.onclick = null; // Remover el onclick
+                    }
+                } else {
+                    showToast('Error', data.message, 'error');
+                }
+            } catch (error) {
+                console.error('Error:', error);
+                showToast('Error', 'Ocurrió un error inesperado', 'error');
+            }
+        }
+
+        // Verificar estado de inscripción al cargar la página
+        document.addEventListener('DOMContentLoaded', async () => {
+            if (Auth.isAuthenticated()) {
+                try {
+                    const response = await fetch('verificar-inscripciones');
+                    const data = await response.json();
+                    
+                    if (data.authenticated && data.cursosInscritos) {
+                        // Actualizar botones de cursos ya inscritos
+                        data.cursosInscritos.forEach(cursoId => {
+                            const button = document.querySelector(`button[data-curso-id="${cursoId}"]`);
+                            if (button) {
+                                button.textContent = 'Inscrito';
+                                button.disabled = true;
+                                button.classList.remove('btn-primary');
+                                button.classList.add('btn-secondary');
+                                button.onclick = null; // Remover el onclick
+                            }
+                        });
+                    }
+                } catch (error) {
+                    console.error('Error verificando inscripciones:', error);
+                }
+            }
+        });
+
+    </script>
 </body>
 </html>

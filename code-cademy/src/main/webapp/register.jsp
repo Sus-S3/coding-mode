@@ -119,16 +119,27 @@
             registerBtn.disabled = true;
             
             try {
-                const success = await Auth.register(userData);
-                if (success) {
-                    showToast('¡Registro exitoso!', 'Tu cuenta ha sido creada correctamente.', 'success');
+                const formDataEncoded = new URLSearchParams(formData);
+                const response = await fetch('register', {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/x-www-form-urlencoded',
+                    },
+                    body: formDataEncoded.toString()
+                });
+                
+                const data = await response.json();
+                
+                if (data.success) {
+                    showToast('¡Registro exitoso!', data.message, 'success');
                     setTimeout(() => {
-                        window.location.href = 'dashboard';
+                        window.location.href = data.redirect;
                     }, 1000);
                 } else {
-                    showToast('Error', 'El correo ya está registrado.', 'error');
+                    showToast('Error', data.message, 'error');
                 }
             } catch (error) {
+                console.error('Error:', error);
                 showToast('Error', 'Ocurrió un error inesperado.', 'error');
             } finally {
                 registerBtn.textContent = 'Crear Cuenta';

@@ -250,7 +250,7 @@ function loadStudentDashboard(container, user) {
         <div class="dashboard-section">
             <div class="section-header">
                 <h2>Mis Cursos</h2>
-                <a href="courses.jsp" class="btn btn-primary">Explorar Cursos</a>
+                <a href="cursos" class="btn btn-primary">Explorar Cursos</a>
             </div>
 
             ${
@@ -264,7 +264,7 @@ function loadStudentDashboard(container, user) {
                         </svg>
                         <h3 style="font-size: 1.125rem; font-weight: 500; color: #1f2937; margin-bottom: 0.5rem;">No tienes cursos inscritos</h3>
                         <p style="color: #6b7280; margin-bottom: 1rem;">Explora nuestro catálogo y comienza tu aprendizaje</p>
-                        <a href="courses.jsp" class="btn btn-primary">Ver Cursos Disponibles</a>
+                        <a href="cursos" class="btn btn-primary">Ver Cursos Disponibles</a>
                     </div>
                 </div>
                 `

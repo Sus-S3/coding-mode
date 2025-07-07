@@ -78,16 +78,30 @@
             loginBtn.disabled = true;
             
             try {
-                const success = await Auth.login(email, password);
-                if (success) {
-                    showToast('¡Bienvenido!', 'Has iniciado sesión correctamente.', 'success');
+                const formData = new URLSearchParams();
+                formData.append('email', email);
+                formData.append('password', password);
+                
+                const response = await fetch('login', {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/x-www-form-urlencoded',
+                    },
+                    body: formData.toString()
+                });
+                
+                const data = await response.json();
+                
+                if (data.success) {
+                    showToast('¡Bienvenido!', data.message, 'success');
                     setTimeout(() => {
-                        window.location.href = 'dashboard';
+                        window.location.href = data.redirect;
                     }, 1000);
                 } else {
-                    showToast('Error', 'Credenciales incorrectas. Intenta de nuevo.', 'error');
+                    showToast('Error', data.message, 'error');
                 }
             } catch (error) {
+                console.error('Error:', error);
                 showToast('Error', 'Ocurrió un error inesperado.', 'error');
             } finally {
                 loginBtn.textContent = 'Iniciar Sesión';
