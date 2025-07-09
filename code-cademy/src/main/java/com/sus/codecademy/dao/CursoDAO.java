@@ -5,8 +5,16 @@ import java.sql.*;
 import java.util.ArrayList;
 import java.util.List;
 
+/**
+ * Clase DAO (Data Access Object) para gestionar operaciones de cursos en la base de datos.
+ * Proporciona métodos para consultar, crear, actualizar y eliminar cursos.
+ */
 public class CursoDAO {
 
+    /**
+     * Obtiene todos los cursos disponibles en el sistema.
+     * @return Lista de todos los cursos
+     */
     public List<Curso> obtenerTodos() {
         List<Curso> cursos = new ArrayList<>();
         String sql = "SELECT * FROM curso";
@@ -31,6 +39,11 @@ public class CursoDAO {
         return cursos;
     }
 
+    /**
+     * Obtiene cursos filtrados por categoría.
+     * @param categoria Categoría de cursos a buscar
+     * @return Lista de cursos de la categoría especificada
+     */
     public List<Curso> obtenerPorCategoria(String categoria) {
         List<Curso> cursos = new ArrayList<>();
         String sql = "SELECT * FROM curso WHERE categoria = ?";
@@ -56,6 +69,10 @@ public class CursoDAO {
         return cursos;
     }
 
+    /**
+     * Obtiene todas las categorías disponibles de cursos.
+     * @return Lista de categorías únicas
+     */
     public List<String> obtenerCategorias() {
         List<String> categorias = new ArrayList<>();
         String sql = "SELECT DISTINCT categoria FROM curso";
@@ -71,6 +88,10 @@ public class CursoDAO {
         return categorias;
     }
 
+    /**
+     * Elimina un curso por su ID.
+     * @param idCurso ID del curso a eliminar
+     */
     public void eliminar(int idCurso) {
         String sql = "DELETE FROM curso WHERE idCurso = ?";
         try (Connection conn = ConexionBD.getConnection();
@@ -82,6 +103,11 @@ public class CursoDAO {
         }
     }
 
+    /**
+     * Obtiene un curso específico por su ID.
+     * @param idCurso ID del curso a buscar
+     * @return Objeto Curso si existe, null en caso contrario
+     */
     public Curso obtenerPorId(int idCurso) {
         String sql = "SELECT * FROM curso WHERE idCurso = ?";
         try (Connection conn = ConexionBD.getConnection();
@@ -106,6 +132,10 @@ public class CursoDAO {
         return null;
     }
 
+    /**
+     * Actualiza los datos de un curso existente.
+     * @param curso Objeto Curso con los datos actualizados
+     */
     public void actualizar(Curso curso) {
         String sql = "UPDATE curso SET nombre=?, descripcion=?, categoria=?, estado=?, duracion=? WHERE idCurso=?";
         try (Connection conn = ConexionBD.getConnection();
@@ -122,6 +152,10 @@ public class CursoDAO {
         }
     }
 
+    /**
+     * Agrega un nuevo curso a la base de datos.
+     * @param curso Objeto Curso con los datos del nuevo curso
+     */
     public void agregar(Curso curso) {
         String sql = "INSERT INTO curso (nombre, descripcion, categoria, estado, duracion, imagen) VALUES (?, ?, ?, ?, ?, ?)";
         try (Connection conn = ConexionBD.getConnection();

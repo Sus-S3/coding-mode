@@ -3,13 +3,19 @@ import java.sql.Connection;
 import java.sql.DriverManager;
 import java.sql.SQLException;
 
-
+/**
+ * Clase utilitaria para gestionar la conexión a la base de datos MySQL.
+ * Proporciona métodos para establecer conexiones con la base de datos CodeAcademy.
+ */
 public class ConexionBD {
     private static final String URL_DB = "jdbc:mysql://localhost:3306/codeacademy";
     private static final String USER_DB = "root";
     private static final String PASSWORD_DB = "SusanaSuarez";
 
-    // Conexión a la base de datos
+    /**
+     * Establece una conexión con la base de datos MySQL.
+     * @return Connection objeto de conexión a la base de datos, o null si falla
+     */
     public static Connection getConnection() {
         Connection conexion = null;
         try {

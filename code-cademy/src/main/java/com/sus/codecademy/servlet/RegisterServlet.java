@@ -12,6 +12,10 @@ import javax.servlet.http.HttpSession;
 import java.io.IOException;
 import java.io.PrintWriter;
 
+/**
+ * Servlet para manejar el registro de nuevos usuarios.
+ * Procesa el formulario de registro y crea cuentas de estudiantes.
+ */
 @WebServlet("/register")
 public class RegisterServlet extends HttpServlet {
     
@@ -23,6 +27,10 @@ public class RegisterServlet extends HttpServlet {
         // No crear admin automáticamente, ya existe en la BD
     }
     
+    /**
+     * Procesa el formulario de registro enviado por POST.
+     * Valida datos, verifica duplicados y crea la cuenta de usuario.
+     */
     @Override
     protected void doPost(HttpServletRequest request, HttpServletResponse response) 
             throws ServletException, IOException {
@@ -98,6 +106,9 @@ public class RegisterServlet extends HttpServlet {
         }
     }
     
+    /**
+     * Redirige a la página de registro si se accede por GET.
+     */
     @Override
     protected void doGet(HttpServletRequest request, HttpServletResponse response) 
             throws ServletException, IOException {

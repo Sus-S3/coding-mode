@@ -1,14 +1,51 @@
-<%@page contentType="text/html; charset=UTF-8" pageEncoding="UTF-8"%>
+image.png<%@page contentType="text/html; charset=UTF-8" pageEncoding="UTF-8"%>
 <%@ taglib uri="http://java.sun.com/jsp/jstl/core" prefix="c" %>
 <%@ taglib uri="http://java.sun.com/jsp/jstl/functions" prefix="fn" %>
+<%@ taglib uri="http://java.sun.com/jsp/jstl/fmt" prefix="fmt" %>
 <!DOCTYPE html>
 <html lang="es">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Dashboard - CodeAcademy</title>
-    <link rel="stylesheet" href="css/styles.css">
-    <link rel="stylesheet" href="css/components.css">
+    <link rel="stylesheet" href="css/styles.css?v=1.1">
+    <link rel="stylesheet" href="css/components.css?v=1.1">
+    <style>
+        /* Estilos inline para asegurar que se apliquen */
+        .enrollments-table .data-table {
+            border-collapse: separate !important;
+            border-spacing: 0 !important;
+        }
+        .enrollments-table .data-table th,
+        .enrollments-table .data-table td {
+            border-right: 1px solid #e5e7eb !important;
+            padding: 1rem 1.5rem !important;
+        }
+        .enrollments-table .data-table th:last-child,
+        .enrollments-table .data-table td:last-child {
+            border-right: none !important;
+        }
+        .enrollments-table .data-table td:nth-child(4),
+        .enrollments-table .data-table td:nth-child(5),
+        .enrollments-table .data-table td:nth-child(6) {
+            padding-left: 2rem !important;
+            padding-right: 2rem !important;
+        }
+        .enrollments-table .data-table th:nth-child(4),
+        .enrollments-table .data-table th:nth-child(5),
+        .enrollments-table .data-table th:nth-child(6) {
+            padding-left: 2rem !important;
+            padding-right: 2rem !important;
+        }
+        .enrollments-table .data-table tbody tr:nth-child(even) {
+            background-color: #fafbfc !important;
+        }
+        .enrollments-table .data-table tbody tr:hover {
+            background-color: #f9fafb !important;
+            transform: translateY(-1px) !important;
+            box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1) !important;
+        }
+    </style>
 </head>
 <body>
     <!-- Navbar -->
@@ -63,7 +100,7 @@
                         <polyline points="12,6 12,12 16,14"/>
                     </svg>
                 </div>
-                <div class="stat-value">0</div> <!-- Puedes reemplazar por el valor real si lo tienes -->
+                <div class="stat-value">${fn:length(inscripciones)}</div>
             </div>
             <!-- Cursos Activos -->
             <div class="stat-card">
@@ -134,9 +171,51 @@
             </div>
 
             <div class="tabs-content" data-content="enrollments" style="display:none;">
-                <!-- Contenido para Ver Inscripciones -->
-                <h2>Inscripciones</h2>
-                <p>Aquí se mostrarán las inscripciones de los estudiantes.</p>
+                <div class="enrollment-management">
+                    <h2>Inscripciones</h2>
+                    <p>Lista de todas las inscripciones de estudiantes a cursos (ordenadas por fecha de inscripción, más antiguas primero)</p>
+                </div>
+
+                <div class="enrollments-table">
+                    <c:choose>
+                        <c:when test="${not empty inscripciones}">
+                            <table class="data-table">
+                                <thead>
+                                    <tr>
+                                        <th>ID</th>
+                                        <th>Estudiante</th>
+                                        <th>Email</th>
+                                        <th>Curso</th>
+                                        <th>Categoría</th>
+                                        <th>Fecha de Inscripción</th>
+                                        <th>Estado</th>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                    <c:forEach var="inscripcion" items="${inscripciones}">
+                                        <tr>
+                                            <td>${inscripcion.idInscripcion}</td>
+                                            <td>${inscripcion.nombreUsuario}</td>
+                                            <td>${inscripcion.correoUsuario}</td>
+                                            <td>${inscripcion.nombreCurso}</td>
+                                            <td>${inscripcion.categoriaCurso}</td>
+                                            <td><fmt:formatDate value="${inscripcion.fechaInscripcion}" pattern="dd/MM/yyyy"/></td>
+                                            <td>
+                                                <span class="status-badge status-active">${inscripcion.estado}</span>
+                                            </td>
+                                        </tr>
+                                    </c:forEach>
+                                </tbody>
+                            </table>
+                        </c:when>
+                        <c:otherwise>
+                            <div class="no-content">
+                                <h3>No hay inscripciones disponibles</h3>
+                                <p>Los estudiantes aparecerán aquí cuando se inscriban en cursos.</p>
+                            </div>
+                        </c:otherwise>
+                    </c:choose>
+                </div>
             </div>
         </div>
     </div>
@@ -289,11 +368,95 @@ window.onclick = function(event) {
     <script>
 document.querySelectorAll('.tabs-trigger').forEach(btn => {
     btn.addEventListener('click', function() {
+        // Remover clase active de todos los botones y contenidos
         document.querySelectorAll('.tabs-trigger').forEach(b => b.classList.remove('active'));
-        document.querySelectorAll('.tabs-content').forEach(tc => tc.classList.remove('active'));
+        document.querySelectorAll('.tabs-content').forEach(tc => {
+            tc.classList.remove('active');
+            tc.style.display = 'none';
+        });
+        
+        // Agregar clase active al botón clickeado
         this.classList.add('active');
-        document.querySelector('.tabs-content[data-content="' + this.dataset.target + '"]').classList.add('active');
+        
+        // Mostrar el contenido correspondiente
+        const targetContent = document.querySelector('.tabs-content[data-content="' + this.dataset.target + '"]');
+        if (targetContent) {
+            targetContent.classList.add('active');
+            targetContent.style.display = 'block';
+        }
     });
+});
+
+// Función para mostrar mensajes de error si existen
+window.addEventListener('DOMContentLoaded', function() {
+    const urlParams = new URLSearchParams(window.location.search);
+    const error = urlParams.get('error');
+    if (error) {
+        // Mostrar mensaje de error usando el sistema de toast existente
+        if (typeof showToast === 'function') {
+            showToast(error, 'error');
+        } else {
+            alert(error);
+        }
+    }
+    
+    // Forzar la aplicación de estilos de la tabla
+    setTimeout(function() {
+        const table = document.querySelector('.enrollments-table .data-table');
+        if (table) {
+            table.style.borderCollapse = 'separate';
+            table.style.borderSpacing = '0';
+            
+            // Aplicar bordes a todas las celdas
+            const cells = table.querySelectorAll('th, td');
+            cells.forEach(cell => {
+                cell.style.borderRight = '1px solid #e5e7eb';
+                cell.style.padding = '1rem 1.5rem';
+            });
+            
+            // Remover borde derecho de la última columna
+            const lastCells = table.querySelectorAll('th:last-child, td:last-child');
+            lastCells.forEach(cell => {
+                cell.style.borderRight = 'none';
+            });
+            
+            // Aplicar padding adicional a columnas específicas
+            const specificCells = table.querySelectorAll('td:nth-child(4), td:nth-child(5), td:nth-child(6)');
+            specificCells.forEach(cell => {
+                cell.style.paddingLeft = '2rem';
+                cell.style.paddingRight = '2rem';
+            });
+            
+            const specificHeaders = table.querySelectorAll('th:nth-child(4), th:nth-child(5), th:nth-child(6)');
+            specificHeaders.forEach(header => {
+                header.style.paddingLeft = '2rem';
+                header.style.paddingRight = '2rem';
+            });
+            
+            // Aplicar filas alternadas
+            const rows = table.querySelectorAll('tbody tr');
+            rows.forEach((row, index) => {
+                if (index % 2 === 1) {
+                    row.style.backgroundColor = '#fafbfc';
+                }
+            });
+        }
+    }, 100);
+    
+    // Configurar menú de usuario
+    setTimeout(function() {
+        // Eliminado: const userMenu = document.getElementById('userMenu');
+        // Eliminado: const userDropdown = document.getElementById('userDropdown');
+        
+        // Eliminado: if (userMenu && userDropdown) {
+        //   userMenu.addEventListener('mouseenter', function() {
+        //     userDropdown.style.display = 'block';
+        //   });
+        //   userMenu.addEventListener('mouseleave', function() {
+        //     userDropdown.style.display = 'none';
+        //   });
+        // }
+    }, 200);
 });
 </script>
 </body>

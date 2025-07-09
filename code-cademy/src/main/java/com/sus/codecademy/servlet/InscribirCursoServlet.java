@@ -14,6 +14,10 @@ import java.io.IOException;
 import java.io.PrintWriter;
 import java.util.Date;
 
+/**
+ * Servlet para manejar la inscripción de usuarios a cursos.
+ * Procesa las solicitudes de inscripción y verifica duplicados.
+ */
 @WebServlet("/inscribir-curso")
 public class InscribirCursoServlet extends HttpServlet {
     
@@ -24,6 +28,10 @@ public class InscribirCursoServlet extends HttpServlet {
         inscripcionDAO = new InscripcionDAO();
     }
     
+    /**
+     * Procesa la solicitud de inscripción a un curso.
+     * Verifica autenticación y evita inscripciones duplicadas.
+     */
     @Override
     protected void doPost(HttpServletRequest request, HttpServletResponse response) 
             throws ServletException, IOException {
@@ -100,6 +108,9 @@ public class InscribirCursoServlet extends HttpServlet {
         }
     }
     
+    /**
+     * Redirige a la página de cursos si se accede por GET.
+     */
     @Override
     protected void doGet(HttpServletRequest request, HttpServletResponse response) 
             throws ServletException, IOException {

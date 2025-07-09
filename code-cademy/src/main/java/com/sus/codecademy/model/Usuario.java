@@ -1,5 +1,9 @@
 package com.sus.codecademy.model;
 
+/**
+ * Modelo de datos para representar un usuario del sistema.
+ * Contiene información personal y de autenticación del usuario.
+ */
 public class Usuario {
     private int idUsuario;
     private String nombre;
@@ -9,11 +13,22 @@ public class Usuario {
     private String rol;
     private String password;
 
-    // Constructor vacío
+    /**
+     * Constructor por defecto.
+     */
     public Usuario() {
     }
 
-    // Constructor con parámetros
+    /**
+     * Constructor con todos los parámetros.
+     * @param idUsuario Identificador único del usuario
+     * @param nombre Nombre completo del usuario
+     * @param correo Correo electrónico del usuario
+     * @param telefono Número de teléfono del usuario
+     * @param pais País de residencia del usuario
+     * @param rol Rol del usuario (admin, estudiante)
+     * @param password Contraseña encriptada del usuario
+     */
     public Usuario(int idUsuario, String nombre, String correo, String telefono, String pais, String rol, String password) {
         this.idUsuario = idUsuario;
         this.nombre = nombre;

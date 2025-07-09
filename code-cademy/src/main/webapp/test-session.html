@@ -1,0 +1,38 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Test Session Status</title>
+</head>
+<body>
+    <h1>Test Session Status</h1>
+    <button onclick="checkSession()">Check Session Status</button>
+    <div id="result"></div>
+
+    <script>
+        async function checkSession() {
+            try {
+                const response = await fetch('session-status');
+                const data = await response.json();
+                
+                document.getElementById('result').innerHTML = `
+                    <h3>Response:</h3>
+                    <pre>${JSON.stringify(data, null, 2)}</pre>
+                `;
+                
+                console.log('Session status:', data);
+            } catch (error) {
+                console.error('Error:', error);
+                document.getElementById('result').innerHTML = `
+                    <h3>Error:</h3>
+                    <pre>${error.message}</pre>
+                `;
+            }
+        }
+
+        // Check session on page load
+        checkSession();
+    </script>
+</body>
+</html> 

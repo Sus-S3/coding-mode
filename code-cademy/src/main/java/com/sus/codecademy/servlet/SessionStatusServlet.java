@@ -20,9 +20,19 @@ public class SessionStatusServlet extends HttpServlet {
         
         response.setContentType("application/json");
         response.setCharacterEncoding("UTF-8");
+        response.setHeader("Cache-Control", "no-cache, no-store, must-revalidate");
+        response.setHeader("Pragma", "no-cache");
+        response.setHeader("Expires", "0");
+        
         PrintWriter out = response.getWriter();
         
         HttpSession session = request.getSession(false);
+        
+        System.out.println("SessionStatusServlet - Session: " + session);
+        if (session != null) {
+            System.out.println("SessionStatusServlet - Session ID: " + session.getId());
+            System.out.println("SessionStatusServlet - Usuario attribute: " + session.getAttribute("usuario"));
+        }
         
         if (session != null && session.getAttribute("usuario") != null) {
             Usuario usuario = (Usuario) session.getAttribute("usuario");
@@ -35,8 +45,10 @@ public class SessionStatusServlet extends HttpServlet {
                 usuario.getRol().replace("\"", "\\\""),
                 "Administrador".equals(usuario.getRol())
             );
+            System.out.println("SessionStatusServlet - Returning authenticated response: " + jsonResponse);
             out.println(jsonResponse);
         } else {
+            System.out.println("SessionStatusServlet - Returning not authenticated response");
             out.println("{\"authenticated\": false}");
         }
     }

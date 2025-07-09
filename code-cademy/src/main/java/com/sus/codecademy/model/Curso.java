@@ -1,5 +1,9 @@
 package com.sus.codecademy.model;
 
+/**
+ * Modelo de datos para representar un curso educativo.
+ * Contiene información del curso incluyendo imagen almacenada como bytes.
+ */
 public class Curso {
     private int idCurso;
     private String nombre;
@@ -9,11 +13,22 @@ public class Curso {
     private String duracion;
     private byte[] imagen;
 
-    // Constructor vacío
+    /**
+     * Constructor por defecto.
+     */
     public Curso() {
     }
 
-    // Constructor con parámetros
+    /**
+     * Constructor con todos los parámetros.
+     * @param idCurso Identificador único del curso
+     * @param nombre Nombre del curso
+     * @param descripcion Descripción detallada del curso
+     * @param categoria Categoría del curso (ej: programación, diseño)
+     * @param estado Estado del curso (activo, inactivo)
+     * @param duracion Duración del curso
+     * @param imagen Imagen del curso almacenada como array de bytes
+     */
     public Curso(int idCurso, String nombre, String descripcion, String categoria, String estado, String duracion, byte[] imagen) {
         this.idCurso = idCurso;
         this.nombre = nombre;

@@ -5,9 +5,17 @@ import java.sql.*;
 import java.util.ArrayList;
 import java.util.List;
 
+/**
+ * Clase DAO (Data Access Object) para gestionar operaciones de usuarios en la base de datos.
+ * Proporciona métodos para registro, autenticación, consulta y gestión de usuarios.
+ */
 public class UsuarioDAO {
     
-    // Método para registrar un nuevo usuario
+    /**
+     * Registra un nuevo usuario en la base de datos.
+     * @param usuario Objeto Usuario con los datos a registrar
+     * @return true si el registro fue exitoso, false en caso contrario
+     */
     public boolean registrarUsuario(Usuario usuario) {
         String sql = "INSERT INTO usuario (nombre, correo, telefono, pais, rol, password) VALUES (?, ?, ?, ?, ?, ?)";
         
@@ -31,7 +39,12 @@ public class UsuarioDAO {
         }
     }
     
-    // Método para autenticar un usuario
+    /**
+     * Autentica un usuario verificando correo y contraseña.
+     * @param correo Correo electrónico del usuario
+     * @param password Contraseña del usuario
+     * @return Objeto Usuario si la autenticación es exitosa, null en caso contrario
+     */
     public Usuario autenticarUsuario(String correo, String password) {
         String sql = "SELECT * FROM usuario WHERE correo = ? AND password = ?";
         
@@ -63,7 +76,11 @@ public class UsuarioDAO {
         return null;
     }
     
-    // Método para obtener un usuario por correo
+    /**
+     * Obtiene un usuario por su correo electrónico.
+     * @param correo Correo electrónico del usuario
+     * @return Objeto Usuario si existe, null en caso contrario
+     */
     public Usuario obtenerUsuarioPorCorreo(String correo) {
         String sql = "SELECT * FROM usuario WHERE correo = ?";
         
@@ -94,7 +111,11 @@ public class UsuarioDAO {
         return null;
     }
     
-    // Método para obtener un usuario por ID
+    /**
+     * Obtiene un usuario por su ID.
+     * @param idUsuario ID del usuario
+     * @return Objeto Usuario si existe, null en caso contrario
+     */
     public Usuario obtenerUsuarioPorId(int idUsuario) {
         String sql = "SELECT * FROM usuario WHERE idUsuario = ?";
         
@@ -125,7 +146,11 @@ public class UsuarioDAO {
         return null;
     }
     
-    // Método para verificar si existe un usuario con el correo
+    /**
+     * Verifica si existe un usuario con el correo especificado.
+     * @param correo Correo electrónico a verificar
+     * @return true si existe el usuario, false en caso contrario
+     */
     public boolean existeUsuario(String correo) {
         String sql = "SELECT COUNT(*) FROM usuario WHERE correo = ?";
         
@@ -148,7 +173,10 @@ public class UsuarioDAO {
         return false;
     }
     
-    // Método para crear el usuario administrador por defecto (ya no se usa automáticamente)
+    /**
+     * Crea el usuario administrador por defecto si no existe.
+     * @return true si se creó exitosamente o ya existía, false en caso contrario
+     */
     public boolean crearAdminPorDefecto() {
         // Verificar si ya existe el admin
         if (existeUsuario("admin@codeacademy.com")) {
@@ -166,7 +194,10 @@ public class UsuarioDAO {
         return registrarUsuario(admin);
     }
     
-    // Método para obtener todos los usuarios (solo para admin)
+    /**
+     * Obtiene todos los usuarios registrados en el sistema.
+     * @return Lista de todos los usuarios ordenados por nombre
+     */
     public List<Usuario> obtenerTodosLosUsuarios() {
         List<Usuario> usuarios = new ArrayList<>();
         String sql = "SELECT * FROM usuario ORDER BY nombre";

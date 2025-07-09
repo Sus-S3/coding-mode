@@ -156,5 +156,14 @@
     <script src="js/auth.js"></script>
     <script src="js/utils.js"></script>
     <script src="js/main.js"></script>
+    <script>
+        // Verificación adicional para debug
+        document.addEventListener('DOMContentLoaded', () => {
+            console.log('Profile page loaded');
+            setTimeout(() => {
+                console.log('Current user after timeout:', Auth.getCurrentUser());
+            }, 1000);
+        });
+    </script>
 </body>
 </html>

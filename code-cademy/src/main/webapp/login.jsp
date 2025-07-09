@@ -21,6 +21,15 @@
                     <span class="brand-text">CodeAcademy</span>
                 </a>
             </div>
+            <div class="nav-links">
+                <a href="index.jsp" class="nav-link">Inicio</a>
+                <a href="cursos" class="nav-link">Cursos</a>
+                <a href="about.jsp" class="nav-link">Sobre Nosotros</a>
+                <a href="contact.jsp" class="nav-link">Contacto</a>
+            </div>
+            <div class="nav-auth" id="navAuth">
+                <!-- Se carga dinámicamente -->
+            </div>
         </div>
     </nav>
 
@@ -52,11 +61,13 @@
                     ¿No tienes una cuenta? 
                     <a href="register.jsp" class="auth-link">Regístrate aquí</a>
                 </p>
+                <!-- 
                 <div class="admin-credentials">
                     <p><strong>Credenciales de Admin:</strong></p>
                     <p>Email: admin@codeacademy.com</p>
                     <p>Contraseña: admin123</p>
                 </div>
+                -->
             </div>
         </div>
     </div>
@@ -66,6 +77,7 @@
 
     <script src="js/auth.js"></script>
     <script src="js/utils.js"></script>
+    <script src="js/main.js"></script>
     <script>
         document.getElementById('loginForm').addEventListener('submit', async function(e) {
             e.preventDefault();

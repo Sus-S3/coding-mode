@@ -4,7 +4,13 @@
 
 // Main application logic
 
-document.addEventListener("DOMContentLoaded", () => {
+document.addEventListener("DOMContentLoaded", async () => {
+  console.log("DOM loaded, starting initialization...")
+  
+  // Wait for authentication check to complete
+  await Auth.checkSessionStatus()
+  console.log("Session status check completed")
+  
   // Initialize authentication check
   checkAuthState()
 
@@ -17,13 +23,16 @@ document.addEventListener("DOMContentLoaded", () => {
 
 function checkAuthState() {
   const currentUser = Auth.getCurrentUser()
+  console.log("checkAuthState - currentUser:", currentUser)
   updateNavbarAuth(currentUser)
 
   // Redirect if authentication required
   const protectedPages = ["dashboard", "profile.jsp"]
   const currentPage = window.location.pathname.split("/").pop()
+  console.log("checkAuthState - currentPage:", currentPage)
 
   if (protectedPages.includes(currentPage) && !currentUser) {
+    console.log("Usuario no autenticado, redirigiendo a login")
     window.location.href = "login.jsp"
     return
   }
@@ -31,7 +40,12 @@ function checkAuthState() {
   // Redirect authenticated users away from auth pages
   const authPages = ["login.jsp", "register.jsp"]
   if (authPages.includes(currentPage) && currentUser) {
-    window.location.href = "dashboard"
+    console.log("Usuario autenticado, redirigiendo según rol")
+    if (currentUser.isAdmin) {
+      window.location.href = "dashboard"
+    } else {
+      window.location.href = "index.jsp"
+    }
     return
   }
 }
@@ -44,7 +58,7 @@ function updateNavbarAuth(user) {
     navAuth.innerHTML = `
             <div class="user-menu">
                 <span class="user-name">${user.nombre}</span>
-                <a href="dashboard" class="btn btn-ghost">Dashboard</a>
+                ${user.isAdmin ? '<a href="dashboard" class="btn btn-ghost">Dashboard</a>' : ''}
                 <a href="profile.jsp" class="btn btn-ghost">Perfil</a>
                 <button onclick="handleLogout()" class="btn btn-ghost">Cerrar Sesión</button>
             </div>

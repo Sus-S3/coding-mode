@@ -12,6 +12,10 @@ import javax.servlet.http.HttpSession;
 import java.io.IOException;
 import java.io.PrintWriter;
 
+/**
+ * Servlet para manejar la autenticación de usuarios.
+ * Procesa el formulario de login y establece la sesión del usuario.
+ */
 @WebServlet("/login")
 public class LoginServlet extends HttpServlet {
     
@@ -23,6 +27,10 @@ public class LoginServlet extends HttpServlet {
         // No crear admin automáticamente, ya existe en la BD
     }
     
+    /**
+     * Procesa el formulario de login enviado por POST.
+     * Autentica al usuario y establece la sesión correspondiente.
+     */
     @Override
     protected void doPost(HttpServletRequest request, HttpServletResponse response) 
             throws ServletException, IOException {
@@ -79,6 +87,9 @@ public class LoginServlet extends HttpServlet {
         }
     }
     
+    /**
+     * Redirige a la página de login si se accede por GET.
+     */
     @Override
     protected void doGet(HttpServletRequest request, HttpServletResponse response) 
             throws ServletException, IOException {

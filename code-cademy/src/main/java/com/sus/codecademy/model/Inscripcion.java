@@ -2,6 +2,10 @@ package com.sus.codecademy.model;
 
 import java.util.Date;
 
+/**
+ * Modelo de datos para representar una inscripción de un usuario a un curso.
+ * Relaciona usuarios con cursos y registra la fecha de inscripción.
+ */
 public class Inscripcion {
     private int idInscripcion;
     private int idUsuario;
@@ -9,11 +13,20 @@ public class Inscripcion {
     private Date fechaInscripcion;
     private String estado;
 
-    // Constructor vacío
+    /**
+     * Constructor por defecto.
+     */
     public Inscripcion() {
     }
 
-    // Constructor con parámetros
+    /**
+     * Constructor con todos los parámetros.
+     * @param idInscripcion Identificador único de la inscripción
+     * @param idUsuario ID del usuario inscrito
+     * @param idCurso ID del curso al que se inscribe
+     * @param fechaInscripcion Fecha de la inscripción
+     * @param estado Estado de la inscripción
+     */
     public Inscripcion(int idInscripcion, int idUsuario, int idCurso, Date fechaInscripcion, String estado) {
         this.idInscripcion = idInscripcion;
         this.idUsuario = idUsuario;
